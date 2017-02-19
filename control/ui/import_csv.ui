@@ -37,6 +37,9 @@
    </item>
    <item row="0" column="0" colspan="3">
     <widget class="QTableWidget" name="tbl">
+     <property name="rowCount">
+      <number>0</number>
+     </property>
      <column>
       <property name="text">
        <string>Active</string>

@@ -38,24 +38,42 @@ class SerialBridge:
         
     def readFeedback(self):
         print "reading feedback"
+        tmp = ""
+        cmt = False
         while not self.conn_down:
             feedback =  self.ser.readline()
             feedback = feedback.replace("\n","")
             feedback = feedback.replace ("\r","")
-            print feedback
-            if not self.callback is None and feedback in self.trigger_words:
-                self.callback(feedback)
+            if cmt:
+                self.callback(tmp+feedback)
+                cmt = False
+                continue
+            print "feedback:",feedback
+            if not self.callback is None:
+                for word in self.trigger_words:
+                    if cmt:
+                        break
+                    if word in feedback:
+                        if word == "CMT":
+                            tmp = feedback
+                            cmt = True
+                            continue
+                        self.callback(feedback)
+                        
             time.sleep(0.1)
         print "done reading feedback"
             
     def send(self, data):
         if len(data)>0:
-            print "send", data
+            # print "send", data
             self.ser.write(data+"\n\r")
             self.ser.flush()
             
     def sendSMS(self, number, text):
         self.send("SMS:"+str(number)+";"+str(text))
+        
+    def readSMS(index):
+        self.send("AT+CMGR="+str(index))
         
     def answerCall(self):
         self.send("ATA")

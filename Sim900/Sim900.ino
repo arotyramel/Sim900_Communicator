@@ -58,17 +58,24 @@ void loop() {
 }
 
 void evaluateSimString() {
-  if (sim900In_.indexOf(F("+CMT:")) >= 0) { //SMS received
-    evaluateIncomingSMS();
-  }
-  else{
-    Serial.println(sim900In_);
-  }
+  Serial.println(sim900In_);
+//  if (sim900In_.indexOf(F("+CMTI:")) >= 0) { //SMS received // use CMT for direct output
+//    //evaluateIncomingSMS();
+//    Serial.println("got sms");
+//    short index = sim900In_.indexOf(",");
+//    int memory_index = sim900In_.substring(index + 1).toInt();
+//    sim900InComplete_ = false;
+//    sim900In_ = "";
+//    Sim900.println("AT+CMGR=memory_index,0\r");
+//  }
+//  else{
+//    
+//  }
 }
 
 void extractSender() {
   short index = sim900In_.indexOf(",");
-  sender_ = sim900In_.substring(7, index - 1);
+  sender_ = sim900In_.substring(8, index - 1); //value is 7 for CMT and 8 for CMTI
 }
 
 short extractTime() {
@@ -132,7 +139,7 @@ void serialEvent() {
 
 
 void done() {
-  Serial.println(F("Done"));
+  //Serial.println(F("Done"));
   // clear the string:
   serialIn_ = "";
   serialInComplete_ = false;
